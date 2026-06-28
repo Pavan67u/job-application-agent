@@ -1,5 +1,6 @@
 import asyncio
 import os
+import time
 from langgraph.graph import StateGraph, END
 from agents.state import AgentState, JobListing
 from agents.resume_agent import parse_jd_and_score, rewrite_resume_for_job
@@ -65,6 +66,8 @@ def score_node(state: AgentState) -> dict:
             print(f"[Node 2] Score failed for {job.title} @ {job.company}: {e}")
             job.match_score = 50.0
             scored.append(job)
+        finally:
+            time.sleep(4)
 
     # Filter — only apply to jobs with score >= 60
     apply_list = [j for j in scored if j.match_score >= 60]
@@ -111,6 +114,8 @@ def tailor_resume_node(state: AgentState) -> dict:
             print(f"[Node 3] Resume tailor failed for {job.company}: {e}")
             job.resume_version = state["base_resume_path"]
             tailored.append(job)
+        finally:
+            time.sleep(4)
 
     return {"tailored_jobs": tailored}
 
